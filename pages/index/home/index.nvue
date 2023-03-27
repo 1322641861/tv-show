@@ -1,0 +1,962 @@
+<template>
+	<view class="index-wrap" :class="{'index-wrap2': !homeData.length || homeData.length == 1 && !shortVideoData.length}" :style="{'padding-top': getBarHeight}">
+		<view class="header-wrap">
+			<view class="header-top" :style="{'height': getBarHeight}"></view>
+			<view class="header">
+				<text class="left-btn">密盒</text>
+				<text class="center-txt" @click="backToTop">剧有引力</text>
+				<view class="left-btn"></view>
+			</view>
+		</view>
+		
+		<view class="content-wrap" :class="{'index-wrap2': !homeData.length}">
+			<view class="content-wrap-top" v-if="homeData.length">
+				<view class="video-list video-list2" v-for="(item, index) in homeData" :key="index">
+					<!-- 视频封面 -->
+					<view class="video-list-top" :class="'tv' + item.playletId" @touchend="touchend($event, index)" @touchmove="touchmove($event, index)">
+						<view class="square-video">
+							<view class="video-wrap">
+								<view class="video-wrap2">
+								
+									<video :id="getVideoId(item.playletId)" class="video-box"
+										:style="{opacity: item.isPlay ? '1' : '0'}"
+										@click="gotoDetail(item.playletId)"
+										:ref="getVideoId(item.playletId)" 
+										:src="getVideoUrl(item.officialVideos.urlPreview)"
+										playsinline="true"
+										:controls="false" 
+										:muted="audioFlag"
+										webkit-playsinline="true"
+										:show-loading="false"
+										:show-center-play-btn="false" 
+										crossorigin="anonymous" 
+										object-fit="cover"
+										@error="getErrorMsg" 
+										@play="getPlayStatus" 
+										@ended="getEndedStatus"
+										x5-playsinline="" 
+										x-webkit-airplay="allow" 
+										x5-video-player-type="h5" 
+										x5-video-player-fullscreen=""
+										x5-video-orientation="portraint">
+									</video>
+						
+									<image @click="gotoDetail(item.playletId)" 
+										class="poster-wrap"
+										:style="{opacity: !item.isPlay ? '1' : '0'}"
+										:src="getVideoUrl(item.cover)"
+										mode="aspectFill">
+									</image>
+								</view>
+							</view>
+							<image class="audio-img" v-if="item.isPlay && audioFlag == true" @click="changeAudio" src="/static/home/audio-close.png" mode="aspectFit"></image>
+							<image class="audio-img" v-if="item.isPlay && audioFlag == false" @click="changeAudio" src="/static/home/audio.png" mode="aspectFit"></image>
+							<image class="onpause-btn" v-if="!item.isPlay" @click="playVideo(index)" src="/static/home/play.png"></image>
+						</view>
+						<!-- 视频描述 -->
+						<!-- :synopsis="item.synopsis" -->
+						<view class="video-profile-wrap">
+							<video-profile :cover="getVideoUrl(item.cover)"
+								:playletName="item.playletName"
+								:playletTagsList="item.playletTags ? item.playletTags.split(',') : []"
+								:isCollected="item.isCollect"
+								@collectVideo="collectVideo(item.playletId)"
+								@gotoDetail="gotoDetail(item.playletId)">
+							</video-profile>
+						</view>
+					</view>
+				</view>
+			</view>
+			
+			<!-- 视频推荐 -->
+			<!-- <view class="margin-height" v-if="homeData.length && homeData.length <= 1"></view>
+			<view class="choice-wrap" v-if="homeData.length && homeData.length > 1">
+				<text class="common-title">精选作品</text>
+				<view class="choice-list">
+					<view class="choice" v-for="(item, index) in homeData" :key="index" @click="gotoDetail(item.playletId)">
+						<choice-item v-if="index != 0"
+							:cover="item.cover" 
+							:playletName="item.playletName" 
+							:framerName="item.framerName" 
+							:playletTagsList="item.playletTags ? item.playletTags.split(',') : []">
+						</choice-item>
+					</view>
+				</view>
+			</view> -->
+			
+			<!-- 短视频推荐 -->
+			<view class="content-wrap-top" v-if="shortVideoData.length">
+				<view class="video-list" v-for="(item, index) in shortVideoData" :key="index">
+
+					<view class="video-list-top">
+						<view class="square-video">
+							<view class="video-wrap">
+								<view class="video-wrap2">
+								
+									<video :id="getVideoId(item.videoId)" class="video-box"
+										:style="{opacity: item.isPlay ? '1' : '0'}"
+										@click="gotoShortDetail(index)"
+										:src="item.h5url" :ref="getVideoId(item.videoId)" 
+										playsinline="true"
+										:controls="false" 
+										:muted="audioFlag"
+										webkit-playsinline="true"
+										:show-loading="false"
+										:show-center-play-btn="false" 
+										crossorigin="anonymous" 
+										object-fit="cover"
+										@error="getErrorMsg" 
+										@play="getPlayStatus" 
+										@ended="getEndedStatus"
+										@waiting="getWaitingStatus"
+										@pause="getPauseStatus"
+										x5-playsinline="" 
+										x-webkit-airplay="allow" 
+										x5-video-player-type="h5" 
+										x5-video-player-fullscreen=""
+										x5-video-orientation="portraint">
+									</video>
+						
+									<image @click="gotoShortDetail(index)"
+										class="poster-wrap"
+										:style="{opacity: !item.isPlay || isLoading ? '1' : '0'}"
+										:src="item.cover"
+										mode="aspectFill">
+									</image>
+									<text v-if="item.isPlay && isLoading" style="color: #fff;position: absolute;top: 310rpx;">加载中...</text>
+									
+								</view>
+							</view>
+							<image class="audio-img" v-if="item.isPlay && audioFlag == true" @click="changeAudio" src="/static/home/audio-close.png" mode="aspectFit"></image>
+							<image class="audio-img" v-if="item.isPlay && audioFlag == false" @click="changeAudio" src="/static/home/audio.png" mode="aspectFit"></image>
+							<image class="onpause-btn" v-if="!item.isPlay" @click="playShortVideo(index)" src="/static/home/play.png"></image>
+						</view>
+						<view class="video-profile-wrap">
+							
+							<!-- :synopsis="item.synopsis"
+							:isCollected="item.isCollect" -->
+							<video-profile :cover="item.cover"
+								:playletName="item.title"
+								:playletTagsList="item.tags ? item.tags.split(',') : []"
+								:isCollected="item.isCollect"
+								:isLike="true"
+								@collectVideo="collectShortVideo(item)"
+								@gotoDetail="gotoShortDetail(index)">
+							</video-profile>
+						</view>
+					</view>
+					<view class="margin-height" style="height: 40rpx;"></view>
+					
+				</view>
+			</view>
+			
+		</view>
+		
+		<!-- 不知为啥显示不tabbar组件, 只能先全部搬过来 -->
+		<!-- <tabbar :pagePath='pagePath'></tabbar> -->
+		<view class="tabbar-wrap">
+			<view class="uni-tabbar">
+				<view class="uni-tabbar-item" v-for="(item,index) in tabbar" :key="index" @tap="changeTab(item)">
+					<view class="uni-tabbar-icon">
+						<image class="tabbar-icon-img" v-if="item.pagePath == pagePath" :src="item.selectedIconPath">
+						</image>
+						<image class="tabbar-icon-img" v-else :src="item.iconPath"></image>
+					</view>
+					<text class="uni-tabbar__label" :class="{'active': item.pagePath == pagePath}">{{item.text}}</text>
+				</view>
+			</view>
+		</view>
+		<uni-popup ref="popup_Teenagers" type="bottom">
+			<view class="teenagers-whole">
+				  <view class="post-teenagers">
+					    <image src="../../../static/img/qsn1.png" mode="widthFix"></image>
+				  </view>
+				  <view class="teenagers-back">
+					    <view class="teenagers-title">青少年模式</view>
+						<view class="teenagers-text">
+							  为呵护未成年人健康成长，密盒短剧特别推出青少年模式，该模式下部分功能无法正常使用。 请监护人主动选择，并设置监护密码。
+						</view> 
+						<view class="teenagers-button" @click="closePopupGoods">我知道了</view>
+						<view class="teenagers-set" @click="goteenagers">设置青少年模式>></view>
+				  </view>
+			</view>
+		</uni-popup>
+	</view>
+</template>
+
+<script>
+	import tabbar from '@/components/tabbar.nvue';
+	import squareVideo from '@/components/video-card/square-video.nvue';
+	import videoProfile from '@/components/profile-item/video-profile.nvue';
+	import choiceItem from '@/components/profile-item/choice-item';
+	import { 
+		getPlayletRecommend,
+		postPlayletAction,
+		postVaasVideoFeed,
+		postVaasVideoChannels,
+	} from '@/api/api.js';
+	import { 
+		postVaasFeedback,
+		postVaasVideoPlay,
+	} from "@/api/videoApi.js"
+	
+	function throttle(fn, interval = 200) {
+		var timer;
+		var flag = false;
+		return function() {
+			if (flag) return
+			var that = this;
+			var args = arguments;
+			flag = true;
+			timer = setTimeout(function() {
+				fn.call(that, args)
+				flag = false
+			}, interval)
+		}
+	}
+	export default {
+		components: {
+			tabbar,
+			squareVideo,
+			videoProfile,
+			choiceItem,
+		},
+		data() {
+			return {
+				pagePath: "pages/index/home/index",
+				choiceList: [],
+				homeData: [],
+				audioFlag: true,
+				sessionId: '',
+				platform: 3, 
+				shortVideoData: [],
+				k: 0, // 短剧下标
+				sK: 0, // 短视频下标
+				videoType: 1, // 1横屏 2竖屏
+				channels: [], // 获得短视频列表
+				channelsId: '30483', // 只要影视短视频id, 暂时写死
+				isLoading: true,
+				// 公共的tabbar
+				tabbar: [{
+						"pagePath": "pages/index/home/index",
+						"iconPath": "/static/tabbar/home.png",
+						"selectedIconPath": "/static/tabbar/home@.png",
+						"text": "追剧"
+					},
+					// {
+					// 	"pagePath": "pages/index/synthesis/synthesis",
+					// 	"iconPath": "/static/tabbar/seek.png",
+					// 	"selectedIconPath": "/static/tabbar/seek@.png",
+					// 	"text": "探剧"
+					// },
+					{
+						"pagePath": "pages/index/my/personal",
+						"iconPath": "/static/tabbar/my.png",
+						"selectedIconPath": "/static/tabbar/my@.png",
+						"text": "我的"
+					}
+				]
+			}
+		},
+		computed: {
+			getBarHeight() {
+				return uni.getSystemInfoSync().statusBarHeight + 'px'
+			},
+		},
+		watch: {
+			$route(to) {
+				if (to.path === '/') {
+					let vaasList = this.$store.state.video.vaasList;
+					if (vaasList.length > 0) {
+						this.shortVideoData = vaasList;
+					}
+				}
+			}
+		},
+		onLoad(e) {
+			// let sessionId = uni.getStorageSync('sessionId')
+			// this.img_url = getApp().globalData.img_url
+			this.getPlatform()
+			this.getSessionId()
+			this.getHomeData()
+			this.getShortVideo();
+		},
+		onPageScroll: throttle(function (e) {
+			let query = uni.createSelectorQuery().in(this);//查询，组件中加上.in(this),不然获取不到。
+			let wh = uni.getSystemInfoSync().windowHeight;//可视区域高度
+			if (this.homeData.length) {
+				const id = this.getVideoId(this.homeData[this.k].playletId);
+				// console.log(111111, id, this.homeData[this.k]);
+				// const id = `.tv${this.homeData[this.k].playletId}`;
+				query
+					.select('#' + id)
+					.boundingClientRect(rect => { // 我查询的是包裹视频的元素，可根据需求
+						if (!rect) return;
+						let top = rect.top;//距离顶部高度
+						let bottom = rect.bottom;
+						let vh = rect.height;//元素高度
+						// console.log(`shortVideoData ==> top: ${top}, bottom: ${bottom}, vh: ${vh}, wh: ${wh}`);
+						// console.log(Math.abs(top) > vh * .81 && top < 0,  bottom > (vh+wh));
+						if (Math.abs(top) > vh * .81 && top < 0 || bottom > (vh+wh)) {
+							// 移除屏幕时暂停
+							this.pauseVideo(this.k)
+							// 并切换当前监听内容下标
+							if (Math.abs(top) > vh * .81 && top < 0) {
+								this.k = (this.homeData.length - 1) > this.k ? ++this.k : this.k
+							} else {
+								this.k = this.k > 0 ? --this.k : 0
+							}
+							// console.log('skkkkkkkkkkkkkk', this.sK);
+						} else if (wh/2 > top && top > 0) {
+							if (!this.homeData[this.k].isPlay) {
+								this.playVideo(this.k)
+								this.homeData[this.k].isPlay = true
+							}
+						}
+					})
+					.exec();
+			}
+			if (this.shortVideoData.length) {
+				const id = this.getVideoId(this.shortVideoData[this.sK].videoId);
+				query
+					.select('#' + id)
+					.boundingClientRect(rect => { // 我查询的是包裹视频的元素，可根据需求
+						if (!rect) return;
+						let top = rect.top;//距离顶部高度
+						let bottom = rect.bottom;
+						let vh = rect.height;//元素高度
+						// console.log(`shortVideoData ==> top: ${top}, bottom: ${bottom}, vh: ${vh}, wh: ${wh}`);
+						// console.log(Math.abs(top) > vh * .81 && top < 0,  bottom > (vh+wh));
+						// if (Math.abs(top) > vh && top < 0 || bottom > (vh+wh)) {
+						if (Math.abs(top) > vh * .81 && top < 0 || bottom > (vh+wh)) {
+							// 移除屏幕时暂停
+							this.pauseShortVideo(this.sK)
+							// 并切换当前监听内容下标
+							if (Math.abs(top) > vh * .81 && top < 0) {
+								this.sK = (this.shortVideoData.length - 1) > this.sK ? ++this.sK : this.sK
+							} else {
+								this.sK = this.sK > 0 ? --this.sK : 0
+							}
+							// console.log('skkkkkkkkkkkkkk', this.sK);
+						} else if (wh/2 > top && top > 0) { // 滑到中间区域自动播放视频
+							if (!this.shortVideoData[this.sK].isPlay) {
+								this.playShortVideo(this.sK)
+								this.shortVideoData[this.sK].isPlay = true
+							}
+						}
+					})
+					.exec();
+			}
+		}),
+		onReachBottom() {
+			console.log('上拉加载');
+			this.getShortVideo()
+		},
+		async onPullDownRefresh() {
+			this.pauseVideo(this.k)
+			this.pauseShortVideo(this.sK)
+			this.k = 0;
+			this.sK = 0;
+			this.getSessionId()
+			await this.getHomeData()
+			this.getShortVideo()
+			uni.stopPullDownRefresh();
+		},
+		methods: {
+			openPopupGoods(){
+				this.$refs.popup_Teenagers.open()				    			
+			},
+			closePopupGoods(){
+				this.$refs.popup_Teenagers.close()
+			},
+			goteenagers(){
+				uni.navigateTo({
+					url: "/pages/index/home/teenagers" 
+				})
+			},
+			getSessionId() {
+				this.sessionId = uni.getStorageSync('sessionId');
+			},
+			getPlatform() {
+				// 平台类型：1-Android，2-iOS，3-H5，4-小程序，5-web，当前默认；3
+				let platform = uni.getSystemInfoSync().platform
+				if (platform == 'android') {
+					this.platform = 1
+				} else if (platform == 'ios') {
+					this.platform = 2
+				} else if (platform == 'devtools') {
+					this.platform = 4
+				}
+				// #ifdef H5
+				this.platform = 3
+				// #endif
+			}, 
+			changeTab(item) {
+				this.page = item.pagePath;
+				if (this.page == 'pages/index/circulation/circulation') {
+					// window.location = 'https://chaoshucang.com/#/'
+					// uni.navigateTo({
+					// 	 url:'/' + this.page,
+					// });
+				} else {
+					uni.reLaunch({
+						url: '/' + this.page,
+					});
+				}
+			},
+			getVideoId(id) {
+				return 'homeV' + id;
+			},
+			getVideoUrl(src) {
+				// #ifdef H5
+				let url = '/res/'
+				// #endif
+				// #ifndef H5
+				let url = getApp().globalData.img_url
+				// #endif
+				return url + src
+			},
+			async getHomeData() {
+				let params = {num: 10, sessionId: this.sessionId}
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				});
+				let res = await getPlayletRecommend(params)
+				uni.hideLoading();
+				if (res) {
+					if (res.code == 200) {
+						this.homeData = res.data;
+					} else {
+						uni.showToast({
+							title: res.message,
+							icon:'none'
+						})
+					}
+				}
+				this.homeData.map(item => {
+					item.isPlay = false
+				})
+			},
+			async getShortChannels() {
+				let res = await postVaasVideoChannels({
+					platform: this.platform,
+					videoType: this.videoType
+				})
+				if (res.code == 200) {
+					this.channels = res.data
+				}
+			},
+			async getShortVideo() {
+				let data = {
+				  channelId: this.channelsId, // 频道ID
+				  loadType: 0, // 加载类型,0-上拉，1-下拉，2-首次刷新；默认：0
+				  platform: this.platform, // 平台类型：1-Android，2-iOS，3-H5，4-小程序，5-web，当前默认；3
+				  size: 8, 
+				  videoType: this.videoType  // 视频类型，1-横屏，2-竖屏
+				}
+				// await this.getShortChannels()
+				uni.showLoading({
+					title: '加载中...',
+					mask: true
+				});
+				let res = await postVaasVideoFeed(data)
+				uni.hideLoading();
+				if (res.code == 200) {
+					if (this.shortVideoData.length) {
+						this.shortVideoData = this.shortVideoData.concat(res.data)
+					} else {
+						this.shortVideoData = res.data
+					}
+					this.shortVideoData.map(item => {
+						item.isPlay = false
+						item.isCollect = false
+					})
+					this.$store.commit({
+						type: 'SET_VAAS_LIST',
+						vaasList: this.shortVideoData
+					})
+				}
+			},
+			gotoDetail(id) {
+				this.pauseVideo(this.k)
+				// 旧页面
+				uni.navigateTo({
+					url: "/pages/index/videoPage/videoPage?vid=" + id
+				})
+				// 新页面
+				// uni.navigateTo({
+				// 	url: "/pages/index/videoPage/detailPage?vid=" + id
+				// })
+			},
+			gotoShortDetail(index) {
+				this.pauseShortVideo(this.sK)
+				// uni.setStorageSync('SHORT_VIDEO', id)
+				this.$store.commit({
+					type: 'SET_VAAS_LIST',
+					vaasList: this.shortVideoData
+				})
+				this.$store.commit({
+					type: 'SET_VAAS_K',
+					k: index
+				})
+				// #ifdef APP-PLUS
+				uni.navigateTo({
+					url: "/pages/index/videoPage/shortVideo"
+				})
+				// #endif
+				// #ifdef H5
+				uni.navigateTo({
+					url: "/pages/index/videoPage/nvueSwiper"
+				})
+				// #endif
+			},
+			backToTop() { // 回到顶部
+				// uni.pageScrollTo({
+				// 	scrollTop: 0,
+				// 	duration: 300
+				// });
+				this.openPopupGoods()
+			},
+			getPlayStatus(e) {
+				console.log('播放中.....', e);
+				this.isLoading = false
+			},
+			getWaitingStatus(e) {
+				console.log('缓冲.....', e);
+			},
+			getPauseStatus(e) {
+				console.log('暂停.....', e);
+				this.isLoading = true
+			},
+			getEndedStatus(e) {
+				// console.log('已结束.....', e);
+				this.stopVideo(this.k)
+			},
+			getErrorMsg(e) {
+				// console.log('播放错误', e);
+			},
+			changeAudio() {
+				this.audioFlag = !this.audioFlag
+			},
+			/**
+			 * 短剧
+			 * */
+			 collectVideo(id) {
+				if (this.sessionId) {
+					let data = {
+						action: 2, 
+						// sessionId: this.sessionId, 
+						playletId: id,
+					}
+					postPlayletAction(data).then((res) => {
+						if (res && res.code == 200) {
+							this.homeData.forEach((item, index) => {
+								if (item.playletId == id) {
+									item.isCollect = !item.isCollect
+									if (item.isCollect) {
+										uni.showToast({
+											title: '已加入追剧',
+											icon: 'none'
+										})
+									} else {
+										uni.showToast({
+											title: '已取消追剧',
+											icon: 'none'
+										})
+									}
+								}
+							})
+						} else {
+							uni.showToast({
+								title: res ? res.message ? res.message : res.msg : '请求失败',
+								icon: 'none'
+							})
+						}
+					})
+				} else {
+					uni.showToast({
+					    title: '请先登录',
+					    icon: 'none',
+					    duration: 800
+					});
+					// uni.navigateTo({
+					//     url: '/pages/index/longin/longin'
+					// })
+				}
+			},
+			playVideo(index) {
+				if (this.k !== index || !this.homeData[index].isPlay) {
+					this.stopVideo(this.k)
+					this.stopShortVideo(this.sK)
+					this.k = index;
+					if (!this.homeData[index]) return
+					this.homeData[index].isPlay = true;
+					this.$forceUpdate(this.homeData)
+					setTimeout(() => {
+						uni.createVideoContext(this.getVideoId(this.homeData[index].playletId)).play()
+					}, 300)
+					// console.log('播放...', this.homeData, this.k);
+				}
+			},
+			pauseVideo(k) {
+				// console.log('暂停...');
+				if (!this.homeData[k]) return
+				this.homeData[k].isPlay = false;
+				this.$forceUpdate(this.homeData)
+				const id = this.getVideoId(this.homeData[k].playletId)
+				uni.createVideoContext(id, this).pause()
+			},
+			stopVideo(k) {
+				// console.log('停止...');
+				if (!this.homeData[k]) return
+				this.homeData[k].isPlay = false;
+				this.$forceUpdate(this.homeData)
+				const id = this.getVideoId(this.homeData[k].playletId)
+				uni.createVideoContext(id, this).seek(0)
+				// uni.createVideoContext(id, this).stop() // 该行为会造成video内置muted属性重置, 但自定义属性未同步
+				uni.createVideoContext(id, this).pause()
+			},
+			touchend(e) {
+				// console.log('开始结束....', e);
+			},
+			touchmove: throttle(function (e) {
+				// let [touches, k] = e;
+				// let touche;
+				// if (touches.touches && touches.touches.length > 0) {
+				// 	touche = touches.touches[0]
+				// 	console.log('开始移动...', touche, k);
+				// }
+			}),
+			/**
+			 * 短视频
+			 * */
+			 collectShortVideo(itm) {
+			 	if (this.sessionId) {
+			 		let data = {
+			 			action: itm.isCollect ? 'dislike' : 'like', 
+			 			videoId: itm.videoId,
+						cpId: itm.authorId,
+						platform: this.platform,
+						sessionId: this.sessionId
+						// userId: ''
+			 		}
+					postVaasFeedback(data).then(res => {
+						if (res && res.code == 200) {
+							this.shortVideoData.forEach((item, index) => {
+								if (item.videoId == itm.videoId) {
+									item.isCollect = !item.isCollect
+								}
+							})
+							this.$forceUpdate(this.shortVideoData)
+						} else {
+							uni.showToast({
+								title: res ? res.message ? res.message : res.msg : '请求失败',
+								icon: 'none'
+							})
+						}
+					})
+			 	} else {
+			 		uni.showToast({
+			 		    title: '请先登录',
+			 		    icon: 'none',
+			 		    duration: 800
+			 		});
+			 		// uni.navigateTo({
+			 		//     url: '/pages/index/longin/longin'
+			 		// })
+			 	}
+			},
+			async getShortVideoUrl() {
+				let data = { id: this.shortVideoData[this.sK].videoId, platform: this.platform }
+				let res = await postVaasVideoPlay(data)
+				if (res && res.data && res.data.length > 0) {
+					return res.data[0].uri
+				} else {
+					return ''
+				}
+			},
+			async playShortVideo(index) {
+				if (this.sK !== index || !this.shortVideoData[index].isPlay) {
+					this.stopShortVideo(this.sK)
+					this.stopVideo(this.k)
+					this.sK = index;
+					if (!this.shortVideoData[index]) return
+					this.shortVideoData[index].isPlay = true;
+					/// 如果该视频已获取过, 则不再请求
+					if (!this.shortVideoData[index].hasGetUrl) {
+						let url = await this.getShortVideoUrl()
+						this.isLoading = false
+						if (url) this.shortVideoData[index].hasGetUrl = true;
+						this.shortVideoData[index].h5url = url
+						this.$forceUpdate(this.shortVideoData)
+					}
+					setTimeout(() => {
+						uni.createVideoContext(this.getVideoId(this.shortVideoData[index].videoId)).play()
+					}, 300)
+				}
+			},
+			pauseShortVideo(sK) {
+				if (!this.shortVideoData[sK]) return
+				this.shortVideoData[sK].isPlay = false;
+				this.$forceUpdate(this.shortVideoData)
+				const id = this.getVideoId(this.shortVideoData[sK].videoId)
+				uni.createVideoContext(id, this).pause()
+			},
+			stopShortVideo(sK) {
+				if (!this.shortVideoData[sK]) return
+				this.shortVideoData[sK].isPlay = false;
+				this.$forceUpdate(this.shortVideoData)
+				const id = this.getVideoId(this.shortVideoData[sK].videoId)
+				uni.createVideoContext(id, this).seek(0)
+				// uni.createVideoContext(id, this).stop() // 该行为会造成video内置muted属性重置, 但自定义属性未同步
+				uni.createVideoContext(id, this).pause()
+			},
+			
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.index-wrap {
+		// padding-top: calc(var(--status-bar-height) + 10px);
+		// overflow-x: hidden;
+		position: relative;
+		padding-bottom: 200rpx;
+		background-color: $uni-theme-bgcolor;
+		// flex: 1;
+		/* #ifdef H5 */
+		min-height: 100vh;
+		/* #endif */
+	}
+	.index-wrap2 {
+		/* #ifdef APP-PLUS */
+		flex: 1;
+		/* #endif */
+	}
+	.header-wrap {
+		position: fixed;
+		z-index: 9;
+		background-color: $uni-theme-bgcolor;
+		// height: calc(var(--status-bar-height) + 10px + 100rpx);
+		// height: 100rpx;
+		left: 0;
+		right: 0;
+		top: 0;
+	}
+	.header {
+		padding: 0 36rpx;
+		height: 100rpx;
+		position: relative;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	.left-btn {
+		font-weight: 500;
+		font-size: 40rpx;
+		line-height: 100rpx;
+		width: 120rpx;
+		color: #fff;
+	}
+	.center-txt {
+		color: $uni-theme-color;
+		font-weight: 500;
+		font-size: 48rpx;
+		line-height: 100rpx;
+		flex: 1;
+		text-align: center;
+	}
+	
+	.common-title {
+		font-weight: 500;
+		font-size: 32rpx;
+		line-height: 44rpx;
+		padding: 60rpx 36rpx 40rpx;
+		color: #fff;
+	}
+	.content-wrap {
+		padding-top: 112rpx;
+	}
+	.content-wrap .video-list2 {
+		margin-bottom: 40rpx;
+	}
+	.choice-list {
+		padding: 0 36rpx;
+		margin-bottom: 56rpx;
+	}
+	.margin-height {
+		height: 80rpx;
+	}
+	
+	// 视频
+	.square-video {
+		position: relative;
+		padding-bottom: 50rpx;
+	}
+	.square-video .video-wrap {
+		position: relative;
+		// width: 678rpx;
+		// height: 678rpx;
+		border-radius: 24rpx;
+		overflow: hidden;
+	}
+	.square-video .video-wrap2 {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: row;
+		position: relative;
+		border-radius: 24rpx;
+		overflow: hidden;
+	}
+	.square-video .poster-box {
+		background-color: blue;
+	}
+	.square-video .poster-wrap {
+		position: absolute;
+		z-index: 2;
+	}
+	.square-video .poster-wrap,
+	.square-video .video-box {
+		width: 678rpx;
+		height: 678rpx;
+		border-radius: 24rpx;
+		overflow: hidden;
+		background: rgba(255, 255, 255, 0.08);
+	}
+	.square-video .audio-btn {
+		padding: 6rpx;
+	}
+	.square-video .audio-img {
+		position: absolute;
+		width: 50rpx;
+		height: 50rpx;
+		right: 80rpx;
+		bottom: 90rpx;
+		z-index: 3;
+	}
+	.square-video .onpause-btn {
+		position: absolute;
+		bottom: 0rpx;
+		right: 76rpx;
+		z-index: 3;
+		width: 100rpx;
+		height: 100rpx;
+	}
+	
+	// 视频推荐
+	.choice-list .choice {
+		margin-bottom: 24rpx;
+	}
+	
+	// 底部tabbar
+	.tabbar-wrap {
+		height: 114upx;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 10;
+		background-color: rgba(255, 255, 255, 0.08);
+		/* #ifndef APP-PLUS-NVUE */
+		backdrop-filter: blur(10rpx);
+		/* #endif */
+	}
+	
+	.tabbar-wrap .uni-tabbar {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		position: relative;
+		height: 114upx;
+		background: rgba(255, 255, 255, 0.08);
+		/* #ifndef APP-PLUS-NVUE */
+		backdrop-filter: blur(10rpx);
+		/* #endif */
+	}
+	
+	.tabbar-wrap .uni-tabbar-item {
+		flex: 1;
+		display: flex;
+		align-items: center;
+	}
+	
+	.tabbar-wrap .uni-tabbar-icon {
+		width: 48upx;
+		height: 48upx;
+	}
+	
+	.tabbar-wrap .tabbar-icon-img {
+		width: 48upx;
+		height: 48upx;
+	}
+	
+	.tabbar-wrap .uni-tabbar__label {
+		// width: 100%;
+		font-weight: 400;
+		font-size: 26upx;
+		color: $uni-theme-textcolor;
+	}
+	
+	.tabbar-wrap .uni-tabbar-img {
+		width: 88upx;
+		height: 88upx;
+	}
+	
+	.tabbar-wrap .active {
+		color: $uni-theme-color;
+	}
+	.teenagers-whole {
+		width: 100%;
+		padding: 32upx;
+		box-sizing:border-box;
+		position: relative;
+	}
+	.post-teenagers {
+		width: 100%;
+		padding:0 54upx;
+		position: absolute;
+		top: 0;
+		z-index: 1;
+	}
+	.teenagers-back {
+		width: 100%;
+		background: #FFFFFF;
+		border-radius: 32upx;
+		padding: 350upx 64upx 40upx 64upx;
+	}
+	.teenagers-title {
+		width: 100%;
+		font-weight: 500;
+		font-size: 32upx;
+		color: #333333;
+		text-align: center;
+	}
+	.teenagers-text {
+		width: 100%;
+		font-size: 26upx;		
+		color: #AAAAAA;
+		padding: 32upx 0;
+	}
+	.teenagers-button {
+		width: 100%;
+		height: 96upx;
+		text-align: center;
+		line-height: 96upx;
+		background: #00E083;
+		border-radius: 166upx;
+		font-weight: 500;
+		font-size: 32upx;
+		color: #FFFFFF;
+	}
+	.teenagers-set {
+		 width: 100%;
+		 text-align: center;
+		 font-size: 26upx;
+		 color: #1966CC;
+		 padding-top: 32upx;
+	}
+	
+</style>

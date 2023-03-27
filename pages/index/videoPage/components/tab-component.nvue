@@ -1,0 +1,67 @@
+<template>
+  <view class="tab">
+    <view class="tab-item" v-for="(item,index) in list"
+      :key="index" @click="switchTab(index)">
+	  <text class="tab-item-txt" :class="{'tab-item-active' : index === current}">{{item}}</text>
+    </view>
+  </view>
+</template>
+
+<script>
+  export default {
+    name: "tab",
+	props: {
+		list: {
+			type: Array,
+			default: () => []
+		},
+		current: {
+			type: Number,
+			default: 0
+		}
+	},
+    data() {
+        return {
+          // list: ['A', 'B'],
+          // current: 0
+        };
+    },
+    methods: {
+		switchTab(index) {
+			  // this.current = index
+			  // 向父页面回传tab索引
+			  this.$emit('change', index)
+		}
+	}
+}
+</script>
+
+<style scoped>
+  .tab {
+    height: 90rpx;
+    line-height: 90rpx;
+    display: flex;
+	flex-direction: row;
+	/* #ifdef APP-PLUS */
+	margin-top: 26rpx;
+	/* #endif */
+  }
+
+  .tab-item {
+	margin-right: 72rpx;
+    text-align: center;
+    transition: all .3s ease-in-out;
+  }
+  
+  .tab-item-txt {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .tab-item:last-child {
+	  margin: 0;
+  }
+  
+  .tab-item-active {
+	  color: #fff;
+  }
+</style>

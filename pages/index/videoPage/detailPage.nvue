@@ -1,0 +1,698 @@
+<template>
+    <view class="detail-page" :style="{height: windowHeight + 'px'}">
+		<view class="video-box">
+			<view class="picture">
+				<image :style="{width: windowWidth + 'px'}" class="poster-img" src="https://picnew11.photophoto.cn/20161129/yuzhouzhongdediqiutupian-26969818_1.jpg" mode="aspectFill"></image>
+			</view>
+			<div class="player-wrap">
+				<div class="mplayer">
+					<!-- <div class="mplayer-video-wrap">
+						<video id="my-video" class="my-video" :webkit-playsinline="true" :playsinline="true" 
+						preload="metadata" crossorigin="anonymous" controls="controls"
+						src="https://upos-sz-mirrorali.bilivideo.com/upgcxcode/11/40/1063494011/1063494011_nb3-1-16.mp4?e=ig8euxZM2rNcNbRVhwdVhwdlhWdVhwdVhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&amp;uipk=5&amp;nbs=1&amp;deadline=1679495217&amp;gen=playurlv2&amp;os=alibv&amp;oi=1900327793&amp;trid=29116cfd5958487d9978ae77b7dc10f3h&amp;mid=109368200&amp;platform=html5&amp;upsig=9e40c2c8b0d2b5da67a0fdac52879ce6&amp;uparams=e,uipk,nbs,deadline,gen,os,oi,trid,mid,platform&amp;bvc=vod&amp;nettype=0&amp;bw=30464&amp;logo=80000000" poster="//i0.hdslb.com/bfs/archive/ca2d8e879c9fde9be4d74849de53ea97117991f1.jpg@480w_270h_1c" 
+						:style="{width: windowWidth, opacity: 1}">
+						</video>
+					</div> -->
+					<video id="my-video" ref="videoBox"
+						:src="videoSrc"
+						:show-center-play-btn="false"
+						:show-loading="false"
+						:muted="muted"
+						:enable-play-gesture="true"
+						:title="allVideoList[currentNum] && allVideoList[currentNum].title"
+						:show-mute-btn="true"
+						@pause="pauseListener"
+						@play="playListener"
+						@error="errorListener"
+						@fullscreenchange="fullscreenchange"
+						@fullscreenclick="fullscreenclick"
+						:style="{width: windowWidth}"
+						>
+					</video>
+					<div class="mplayer-control-wrap">
+						
+					</div>
+				</div>
+			</div>
+		</view>
+		
+		<!-- #ifdef H5 -->
+		<div class="content-box" :show-scrollbar="false" :bounce="false">
+			<div class="top-desc-wrap">
+				<div class="buy-vip">
+					<text class="left-txt">购买会员, 可以观看全集视频</text>
+					<text class="buy-btn">立即购买</text>
+				</div>
+				<div class="contract">
+					<div class="contract-left">
+						<div class="avatar">
+							<image class="avatar-img" src="@/static/home/test2.png" mode="aspectFill"></image>
+						</div>
+						<div class="contract-desc">
+							<text class="contract-title">合约明湖合约明湖合约明湖合约明湖</text>
+							<text class="contract-tip">赞赏合约, 尊享提成</text>
+						</div>
+					</div>
+					<div class="contract-buy">
+						<text class="buy-txt">去购买</text>
+					</div>
+				</div>
+				<div class="video-desc">
+					<div class="title">
+						<text class="title-txt">标题标题</text>
+					</div>
+					<div class="tag-list">
+						<view class="flag-list" v-for="(itm, index) in playletTagsList" :key="index">
+							<view class="flag-list-2" v-if="index < 3">
+								<image class="flag-list-img" src="@/static/home/flag.png" mode="aspectFit"></image>
+								<text class="flag-list-txt">{{itm}}</text>
+							</view>
+						</view>
+					</div>
+					<div class="desc-box">
+						<div class="desc-list">
+							<!-- <text class="tip">简介:</text> -->
+							<text class="desc">简介: 说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明</text>
+							<div class="more-desc1">
+								<text class="more-desc"> 详情></text>
+							</div>
+						</div>
+						<div class="update-box">
+							<text class="update-msg">每周三更新</text>
+						</div>
+					</div>
+					<div class="btn-list">
+						<div class="btn-box" v-for="(item, index) in controlList" :key="index">
+							<image class="btn-img" :src="item.img" mode="aspectFit"></image>
+							<text class="btn-txt">{{item.name}}</text>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="bottom-control-wrap">
+				<div class="control-tab">
+					<tab-component :list="tabList" :current="current" @change="swtichSwiper"></tab-component>
+				</div>
+				<div class="control-msg">
+					<swiper class="scroll-view-height" :style="{height: windowHeight/2 + 'px'}" @change="swipeIndex" 
+					        :current="current" :duration="100">
+					    <swiper-item>
+					        <scroll-view scroll-y="true" :style="{height: windowHeight/2 + 'px'}" 
+								class="scroll-view-height list-content" @scrolltolower="scrolltolower">
+					            <view class="list-item selected-wrap" v-for="(item,index) in 20" :key="'A'+index">
+									A-list {{index}}
+								</view>
+					        </scroll-view>
+					    </swiper-item>
+					    <swiper-item>
+					        <scroll-view scroll-y="true" :style="{height: windowHeight/2 + 'px'}" class="scroll-view-height list-content">
+					            <div class="list-item brief-wrap">
+									<div class="brief-box">
+										<text class="brief">fhajlskdfhjklasdfhjkladsfhkljasdfhkasfdsfads</text>
+									</div>
+									<div class="figure-wrap">
+										<div class="ftitle">
+											<text class="ftitle-txt">导演</text>
+										</div>
+										<div class="favatar">
+											<div class="avatar-box">
+												<image class="fimg" src="@/static/home/test2.png" mode="aspectFit"></image>
+												<text class="ftxt">王家卫</text>
+											</div>
+											<div class="avatar-box">
+												<image class="fimg" src="@/static/home/test2.png" mode="aspectFit"></image>
+												<text class="ftxt">王家卫</text>
+											</div>
+										</div>
+									</div>
+									<div class="figure-wrap">
+										<div class="ftitle">
+											<text class="ftitle-txt">演员</text>
+										</div>
+										<div class="favatar">
+											<div class="avatar-box avatar-box2">
+												<image class="fimg" src="@/static/home/test2.png" mode="aspectFit"></image>
+												<text class="ftxt">王家卫</text>
+											</div>
+											<div class="avatar-box avatar-box2">
+												<image class="fimg" src="@/static/home/test2.png" mode="aspectFit"></image>
+												<text class="ftxt">王家卫</text>
+											</div>
+										</div>
+									</div>
+								</div>
+					        </scroll-view>
+					    </swiper-item>
+						<swiper-item>
+						    <scroll-view scroll-y="true" :style="{height: windowHeight/2 + 'px'}" class="scroll-view-height list-content">
+						        <view class="list-item comment-wrap" v-for="(item,index) in 20" 
+						          :key="'B'+index">B-list {{index}}</view>
+						    </scroll-view>
+						</swiper-item>
+					</swiper>
+				</div>
+			</div>
+		</div>
+		<!-- #endif -->
+		
+		<!-- #ifdef APP-PLUS -->
+		<list class="content-box" :show-scrollbar="false" :bounce="false">
+			<cell class="top-desc-wrap">
+				<div class="buy-vip">
+					<text class="left-txt">购买会员, 可以观看全集视频</text>
+					<text class="buy-btn">立即购买</text>
+				</div>
+				<div class="contract">
+					<div class="contract-left">
+						<div class="avatar">
+							<image class="avatar-img" src="@/static/home/test2.png" mode="aspectFill"></image>
+						</div>
+						<div class="contract-desc">
+							<text class="contract-title">合约明湖合约明湖合约明湖合约明湖</text>
+							<text class="contract-tip">赞赏合约, 尊享提成</text>
+						</div>
+					</div>
+					<div class="contract-buy">
+						<text class="buy-txt">去购买</text>
+					</div>
+				</div>
+				<div class="video-desc">
+					<div class="title">
+						<text class="title-txt">标题标题</text>
+					</div>
+					<div class="tag-list">
+						<view class="flag-list" v-for="(itm, index) in playletTagsList" :key="index">
+							<view class="flag-list-2" v-if="index < 3">
+								<image class="flag-list-img" src="@/static/home/flag.png" mode="aspectFit"></image>
+								<text class="flag-list-txt">{{itm}}</text>
+							</view>
+						</view>
+					</div>
+					<div class="desc-box">
+						<div class="desc-list">
+							<!-- <text class="tip">简介:</text> -->
+							<text class="desc">简介: 说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明</text>
+							<div class="more-desc1">
+								<text class="more-desc"> 详情></text>
+							</div>
+						</div>
+						<div class="update-box">
+							<text class="update-msg">每周三更新</text>
+						</div>
+					</div>
+					<div class="btn-list">
+						<div class="btn-box" v-for="(item, index) in controlList" :key="index">
+							<image class="btn-img" :src="item.img" mode="aspectFit"></image>
+							<text class="btn-txt">{{item.name}}</text>
+						</div>
+					</div>
+				</div>
+			</cell>
+			<cell class="bottom-control-wrap">
+				<div class="control-tab">
+					<tab-component :list="tabList" :current="current" @change="swtichSwiper"></tab-component>
+				</div>
+				<div class="control-msg">
+					<swiper class="scroll-view-height" :style="{height: windowHeight/2 + 'px'}" @change="swipeIndex" 
+					        :current="current" :duration="100">
+					    <swiper-item>
+					        <scroll-view scroll-y="true" :style="{height: windowHeight/2 + 'px'}" 
+								class="scroll-view-height list-content" @scrolltolower="scrolltolower">
+					            <view class="list-item selected-wrap" v-for="(item,index) in 20" :key="'A'+index">
+									A-list {{index}}
+								</view>
+					        </scroll-view>
+					    </swiper-item>
+					    <swiper-item>
+					        <scroll-view scroll-y="true" :style="{height: windowHeight/2 + 'px'}" class="scroll-view-height list-content">
+					            <div class="list-item brief-wrap">
+									<div class="brief-box">
+										<text class="brief">fhajlskdfhjklasdfhjkladsfhkljasdfhkasfdsfads</text>
+									</div>
+									<div class="figure-wrap">
+										<div class="ftitle">
+											<text class="ftitle-txt">导演</text>
+										</div>
+										<div class="favatar">
+											<div class="avatar-box">
+												<image class="fimg" src="@/static/home/test2.png" mode="aspectFit"></image>
+												<text class="ftxt">王家卫</text>
+											</div>
+											<div class="avatar-box">
+												<image class="fimg" src="@/static/home/test2.png" mode="aspectFit"></image>
+												<text class="ftxt">王家卫</text>
+											</div>
+										</div>
+									</div>
+									<div class="figure-wrap">
+										<div class="ftitle">
+											<text class="ftitle-txt">演员</text>
+										</div>
+										<div class="favatar">
+											<div class="avatar-box avatar-box2">
+												<image class="fimg" src="@/static/home/test2.png" mode="aspectFit"></image>
+												<text class="ftxt">王家卫</text>
+											</div>
+											<div class="avatar-box avatar-box2">
+												<image class="fimg" src="@/static/home/test2.png" mode="aspectFit"></image>
+												<text class="ftxt">王家卫</text>
+											</div>
+										</div>
+									</div>
+								</div>
+					        </scroll-view>
+					    </swiper-item>
+						<swiper-item>
+						    <scroll-view scroll-y="true" :style="{height: windowHeight/2 + 'px'}" class="scroll-view-height list-content">
+						        <view class="list-item comment-wrap" v-for="(item,index) in 20" 
+						          :key="'B'+index">B-list {{index}}</view>
+						    </scroll-view>
+						</swiper-item>
+					</swiper>
+				</div>
+			</cell>
+		</list>
+		<!-- #endif -->
+		
+		<back-icon></back-icon>
+	</view>
+</template>
+
+<script>
+import tabComponent from './components/tab-component.nvue'
+import backIcon from "@/components/backIcon.vue"
+export default {
+    components: {
+		tabComponent,
+		backIcon,
+	},
+    name: 'detail-page',
+    data() {
+        return {
+			windowWidth: 0,
+			windowHeight: 0,
+			playletTagsList: ['标签1', '标签1'],
+			controlList: [],
+			current: 0, // 默认选集列表
+			tabList: ['选集', '简介', '评论'],
+        };
+    },
+	computed: {
+		getEmptyList() {
+			let list = [];
+			if (this.profileData && this.profileData.actor) {
+				let len = this.profileData.actor.length % 4;
+				list = len >= 2 ? new Array(4 - len) : []
+			} else {
+				list = []
+			}
+			return list;
+		},
+	},
+	created() {
+		this.windowWidth = uni.getSystemInfoSync().windowWidth
+		this.windowHeight = uni.getSystemInfoSync().windowHeight
+		this.initControlList()
+		console.log(this.windowHeight);
+	},
+    methods: {
+		initControlList() {
+			this.controlList = [
+				{name: '点赞', img: '/static/home/icon1.png', isChecked: false, onTap: () => {} },
+				{name: '追剧', img: '/static/home/icon2.png', isChecked: false, onTap: () => {} },
+				{name: '分享', img: '/static/home/icon3.png', isChecked: false, onTap: () => {} },
+				{name: '赞赏', img: '/static/home/icon4.png', isChecked: false, onTap: () => {} }
+			]
+		},
+		swipeIndex(index) {
+			this.current = index.detail.current
+		},
+		swtichSwiper(index) {
+			// 通过tab组件回调点击切换的index同步swiper的current索引
+			this.current = index
+		},
+		scrolltolower(e) {
+			console.log('滚到底部了..', e);
+		},
+	},
+}
+</script>
+
+<style scoped>
+	.detail-page {
+		position: relative;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		background-color: #11191f;
+		padding-top: calc(var(--status-bar-height) + 10px);
+	}
+	
+	.video-box {
+		width: 100%;
+		height: 420rpx;
+		position: relative;
+	}
+	.picture {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		z-index: 2;
+	}
+	.poster-img {
+		width: 100%;
+		width: 600px;
+		height: 100%;
+	}
+	.player-wrap {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+	}
+	.mplayer {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+	.mplayer-video-wrap {
+		width: 100%;
+		height: 100%;
+		background: #000;
+		background-color: yellowgreen;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.my-video {
+		width: 100%;
+		height: 420rpx;
+		background-color: #000;
+		background-color: pink;
+	}
+	
+	.content-box {
+		flex: 1;
+		/* #ifdef APP-PLUS-NVUE */
+		background-color: aqua;
+		/* #endif */
+		padding: 0 32rpx;
+		overflow-y: scroll;
+	}
+	.top-desc-wrap .buy-vip {
+		margin-top: 24rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		height: 72rpx;
+		border-radius: 12rpx;
+		background: #1D252B;
+		padding: 0 24rpx;
+	}
+	.buy-vip .left-txt {
+		font-size: 26rpx;
+		color: rgba(255, 255, 255, 0.7);
+	}
+	.buy-vip .buy-btn {
+		width: 156rpx;
+		height: 56rpx;
+		background-image: linear-gradient(97.59deg, rgba(247, 195, 64, 0.3) 1.68%, rgba(93, 232, 155, 0.3) 100%);
+		border-radius: 8rpx;
+		color: #FBE699;
+		line-height: 56rpx;
+		text-align: center;
+		font-weight: 500;
+		font-size: 24rpx;
+	}
+	
+	.contract {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 24rpx;
+		background: #1D252B;
+		border-radius: 12rpx;
+		height: 168rpx;
+		margin-top: 24rpx;
+	}
+	.contract .contract-buy {
+		width: 148rpx;
+		height: 56rpx;
+		line-height: 56rpx;
+		text-align: center;
+		background-color: yellow;
+		background-image: linear-gradient(278.55deg, #D32014, #E94723);
+		border-radius: 12rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.contract-buy .buy-txt {
+		font-weight: 500;
+		font-size: 24rpx;
+		color: #FFFFFF;
+	}
+	.contract .contract-left {
+		display: flex;
+		justify-content: space-between;
+		flex-direction: row;
+		flex: 1;
+	}
+	.contract-left .avatar {
+		width: 120rpx;
+		height: 120rpx;
+		border-radius: 8rpx;
+		overflow: hidden;
+		margin-right: 16rpx;
+	}
+	.contract-left .avatar-img {
+		width: 120rpx;
+		height: 120rpx;
+	}
+	.contract-desc {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		/* justify-content: space-evenly; */
+		margin-right: 12rpx;
+	}
+	.contract-desc .contract-title {
+		font-weight: 500;
+		font-size: 28rpx;
+		line-height: 40rpx;
+		color: #FFFFFF;
+		overflow: hidden;
+		max-lines: 1;
+		lines: 1;
+		text-overflow: ellipsis;
+		/* #ifdef H5 */
+		max-width: 320rpx;
+		white-space: nowrap;
+		/* #endif */
+		padding-top: 14rpx;
+	}
+	.contract-desc .contract-tip {
+		font-weight: 400;
+		font-size: 26rpx;
+		line-height: 36rpx;
+		color: rgba(255, 255, 255, 0.7);
+		padding-top: 16rpx;
+	}
+	
+	.video-desc {
+		
+	}
+	.video-desc .tag-list {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		flex-wrap: wrap;
+		margin-top: 12rpx;
+	}
+	.tag-list .flag-list {
+		margin-right: 12rpx;
+		margin-top: 12rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+	.flag-list-2 {
+		padding: 4rpx 12rpx;
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: 8rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+	.flag-list-2 .flag-list-txt {
+		font-size: 24rpx;
+		color: #fff;
+	}
+	.flag-list-2 .flag-list-img {
+		width: 20rpx;
+		height: 32rpx;
+		margin-right: 8rpx;
+	}
+	
+	.video-desc .title {
+		margin-top: 40rpx;
+	}
+	.video-desc .title-txt {
+		font-weight: 500;
+		font-size: 32rpx;
+		line-height: 44rpx;
+		color: #FFFFFF;
+	}
+	
+	.desc-box {
+		
+	}
+	.desc-box .desc-list {
+		margin-top: 24rpx;
+	}
+	.desc-list .tip {
+		padding-right: 8rpx;
+	}
+	.desc-list .desc {
+		overflow: hidden;
+		word-break: break-all;  /* break-all(允许在单词内换行。) */
+		text-overflow: ellipsis;  /* 超出部分省略号 */
+		display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/
+		-webkit-box-orient: vertical; /** 设置或检索伸缩盒对象的子元素的排列方式 **/
+		-webkit-line-clamp: 2; /** 显示的行数 **/
+		lines: 2; /* NVUE下要用这个属性，来让文字超出隐藏变省略号 */
+	}
+	.desc-list .desc,
+	.desc-list .tip {
+		font-weight: 400;
+		font-size: 26rpx;
+		line-height: 36rpx;
+		/* color: #FFFFFF; */
+		color: rgba(255, 255, 255, 0.7);
+	}
+	.desc-list .more-desc1 {
+		display: flex;
+		justify-content: flex-end;
+		flex-direction: row;
+	}
+	.desc-list .more-desc {
+		font-weight: 500;
+		font-size: 13px;
+		line-height: 18px;
+		color: #4E8AFF;
+		padding-left: 8rpx;
+		padding-top: 8rpx;
+	}
+	.desc-box .update-box {
+		margin-top: 32rpx;
+	}
+	.update-box .update-msg {
+		font-weight: 400;
+		font-size: 24rpx;
+		line-height: 34rpx;
+		color: rgba(255, 255, 255, 0.5);
+	}
+	.btn-list {
+		margin-top: 30rpx;
+		margin-bottom: 18rpx;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-direction: row;
+	}
+	.btn-list .btn-box {
+		width: 160rpx;
+		height: 72rpx;
+		background: #1D252B;
+		border-radius: 12rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: row;
+	}
+	.btn-list .btn-img {
+		width: 40rpx;
+		height: 40rpx;
+		margin-right: 19rpx;
+	}
+	.btn-list .btn-txt {
+		font-weight: 400;
+		font-size: 24rpx;
+		line-height: 34rpx;
+		color: #FFFFFF;
+	}
+	
+	.bottom-control-wrap .control-tab {
+		display: flex;
+		flex-direction: row;
+	}
+	.bottom-control-wrap .tab-line {
+		padding: 22rpx 0;
+		font-weight: 500;
+		font-size: 32rpx;
+		line-height: 44rpx;
+		color: rgba(255, 255, 255, 0.5);
+		margin-right: 72rpx;
+	}
+	.bottom-control-wrap .tab-line:last-child {
+		margin: 0;
+	}
+	.bottom-control-wrap .tab-line .checked {
+		color: #fff;
+	}
+	
+	.list-content {
+		padding-bottom: 20rpx;
+	}
+	.brief-box .brief {
+		font-weight: 400;
+		font-size: 26rpx;
+		line-height: 40rpx;
+		color: rgba(255, 255, 255, 0.7);
+	}
+	.figure-wrap .ftitle {
+		margin: 40rpx 0;
+	}
+	.figure-wrap .ftitle .ftitle-txt {
+		font-weight: 500;
+		font-size: 32rpx;
+		line-height: 44rpx;
+		color: #FFFFFF;
+	}
+	.figure-wrap .favatar {
+		display: flex;
+		flex-direction: row;
+	}
+	.figure-wrap .avatar-box {
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		margin-right: 48rpx;
+		margin-bottom: 40rpx;
+	}
+	/* .figure-wrap .avatar-box2 {
+		margin-right: 98rpx;
+	}
+	.figure-wrap .avatar-box2:nth-child(4n) {
+		margin-right: 0;
+	} */
+	.figure-wrap .fimg {
+		width: 96rpx;
+		height: 96rpx;
+		border-radius: 50%;
+	}
+	.figure-wrap .ftxt {
+		font-size: 24rpx;
+		line-height: 34rpx;
+		color: #D8D8D8;
+		padding-top: 16rpx;
+	}
+	
+</style>

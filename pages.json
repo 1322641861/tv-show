@@ -1,0 +1,568 @@
+{
+    "easycom": {
+        "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+    },
+    "pages": [{
+            "path": "pages/index/home/index",
+            "style": {
+                "navigationBarTitleText": "追剧",
+                "navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 100
+            }
+        },
+		{
+		        "path": "pages/index/home/teenagers",
+		        "style": {
+		            "navigationBarTitleText": "青少年模式"
+		        }
+		    },
+        {
+            "path": "pages/index/home/home",
+            "style": {
+                "navigationBarTitleText": "主页"
+            }
+
+        },
+        {
+            "path": "uni_modules/buuug7-img-cropper/pages/cropper",
+            "style": {
+                "navigationBarTitleText": "图片裁剪"
+            }
+        },
+        {
+            "path": "pages/index/index",
+            "style": {
+                "navigationBarTitleText": "密盒星球"
+
+            }
+        }, {
+            "path": "pages/index/home/Download",
+            "style": {
+                "navigationBarTitleText": "下载app"
+            }
+
+        }, {
+            "path": "pages/index/home/boxInfo",
+            "style": {
+                "navigationBarTitleText": "详情"
+            }
+
+        }, {
+            "path": "pages/index/home/artworkinfo",
+            "style": {
+                "navigationBarTitleText": "详情"
+            }
+
+        }, {
+            "path": "pages/index/home/drawGift",
+            "style": {
+                "navigationBarTitleText": "中奖记录"
+            }
+        }, {
+            "path": "pages/index/home/luckDraw",
+            "style": {
+                "navigationBarTitleText": "幸运大抽奖"
+            }
+        }, {
+            "path": "pages/index/home/receiveRrize",
+            "style": {
+                "navigationBarTitleText": "领取奖品"
+            }
+        }, {
+            "path": "pages/index/home/prizeRecord",
+            "style": {
+                "navigationBarTitleText": "详情"
+            }
+        }, {
+            "path": "pages/index/home/payPath",
+            "style": {
+                "navigationBarTitleText": "支付宝支付"
+            }
+
+        }, {
+            "path": "pages/index/box/box",
+            "style": {
+                "navigationBarTitleText": "密盒"
+            }
+
+        }, {
+            "path": "pages/index/box/search",
+            "style": {
+                "navigationBarTitleText": "搜索"
+            }
+
+        }, {
+            "path": "pages/index/my/knapsack",
+            "style": {
+                "navigationBarTitleText": "我的背包"
+            }
+        }, {
+            "path": "pages/index/my/setup",
+            "style": {
+                "navigationBarTitleText": "设置"
+            }
+        }, {
+            "path": "pages/index/my/setpassword",
+            "style": {
+                "navigationBarTitleText": "设置登录密码"
+            }
+        }, {
+            "path": "pages/index/my/mybox",
+            "style": {
+                "navigationBarTitleText": "我的盲盒"
+            }
+        }, {
+            "path": "pages/index/my/Rechargetext",
+            "style": {
+                "navigationBarTitleText": "蜜糖充值协议"
+            }
+        }, {
+            "path": "pages/index/my/Honey",
+            "style": {
+                "navigationBarTitleText": "蜜糖"
+            }
+        },
+        {
+            "path": "pages/index/my/Cropping",
+            "style": {
+                "navigationBarTitleText": "裁剪头像"
+            }
+        }, {
+            "path": "pages/index/my/Photo",
+            "style": {
+                "navigationBarTitleText": "我的艺术品图片"
+            }
+        }, {
+            "path": "pages/index/my/orderInfo",
+            "style": {
+                "navigationBarTitleText": "订单详情"
+            }
+        }, {
+            "path": "pages/index/my/myorder",
+            "style": {
+                "navigationBarTitleText": "我的订单"
+            }
+        }, {
+            "path": "pages/index/my/detailList",
+            "style": {
+                "navigationBarTitleText": "蜜糖明细"
+            }
+        }, {
+            "path": "pages/index/my/fansList",
+            "style": {
+                "navigationBarTitleText": "邀请用户列表"
+            }
+        }, {
+            "path": "pages/index/my/reHoney",
+            "style": {
+                "navigationBarTitleText": "充值蜜糖"
+            }
+        }, {
+            "path": "pages/index/my/account",
+            "style": {
+                "navigationBarTitleText": "区块链账号"
+            }
+        }, {
+            "path": "pages/index/my/editInfo",
+            "style": {
+                "navigationBarTitleText": "编辑资料"
+            }
+
+        }, {
+            "path": "pages/index/my/editPhone",
+            "style": {
+                "navigationBarTitleText": "更换手机号"
+            }
+
+        }, {
+            "path": "pages/index/my/portrait",
+            "style": {
+                "navigationBarTitleText": "修改头像"
+            }
+
+        }, {
+            "path": "pages/index/my/myArtwork",
+            "style": {
+                "navigationBarTitleText": "我的艺术品"
+            }
+
+        }, {
+            "path": "pages/index/my/myArtworkInfo",
+            "style": {
+                "navigationBarTitleText": "我的艺术品详情"
+            }
+
+        }, {
+            "path": "pages/index/my/my",
+            "style": {
+                "navigationBarTitleText": "我的",
+                "enablePullDownRefresh": true,
+                "onReachBottomDistance": 10
+            }
+        },
+        {
+            "path": "pages/index/my/authentication",
+            "style": {
+                "navigationBarTitleText": "实名认证"
+            }
+
+        },
+        {
+            "path": "pages/index/my/invitation",
+            "style": {
+                "navigationBarTitleText": "邀请好友"
+            }
+
+        },
+        {
+            "path": "pages/index/my/AddCard",
+            "style": {
+                "navigationBarTitleText": "添加银行卡"
+            }
+
+        },
+        {
+            "path": "pages/index/my/MyCard",
+            "style": {
+                "navigationBarTitleText": "银行卡"
+            }
+
+        },
+        {
+            "path": "pages/index/my/receive",
+            "style": {
+                "navigationBarTitleText": "详情"
+            }
+
+        },
+        {
+            "path": "pages/index/my/Ranking",
+            "style": {
+                "navigationBarTitleText": "排行榜"
+            }
+
+        }, {
+            "path": "pages/index/news/news",
+            "style": {
+                "navigationBarTitleText": "消息"
+            }
+
+        }, {
+            "path": "pages/index/synthesis/activity",
+            "style": {
+                "navigationBarTitleText": "限时活动"
+            }
+        }, {
+            "path": "pages/index/synthesis/Strategy",
+            "style": {
+                "navigationBarTitleText": "积分攻略"
+            }
+        }, {
+            "path": "pages/index/synthesis/moredraw",
+            "style": {
+                "navigationBarTitleText": "更多抽奖"
+            }
+        }, {
+            "path": "pages/index/synthesis/gralorder",
+            "style": {
+                "navigationBarTitleText": "确认订单"
+            }
+        }, {
+            "path": "pages/index/synthesis/Integralinfo",
+            "style": {
+                "navigationBarTitleText": "详情"
+            }
+        }, {
+            "path": "pages/index/synthesis/drawinfo",
+            "style": {
+                "navigationBarTitleText": "详情"
+
+            }
+        }, {
+            "path": "pages/index/synthesis/Integralrule",
+            "style": {
+                "navigationBarTitleText": "积分规则"
+
+            }
+        }, {
+            "path": "pages/index/synthesis/integralList",
+            "style": {
+                "navigationBarTitleText": "积分明细"
+
+            }
+        }, {
+            "path": "pages/index/synthesis/mygift",
+            "style": {
+                "navigationBarTitleText": "我的礼品"
+
+            }
+        }, {
+            "path": "pages/index/synthesis/synthesis",
+            "style": {
+                "navigationBarTitleText": "合成"
+
+            }
+        }, {
+            "path": "pages/index/synthesis/integralShop",
+            "style": {
+                "navigationBarTitleText": "积分乐园"
+
+            }
+        },
+        {
+            "path": "pages/index/synthesis/synthesisinfo",
+            "style": {
+                "navigationBarTitleText": "合成"
+
+            }
+        }, {
+            "path": "pages/index/longin/longin",
+            "style": {
+                "navigationBarTitleText": "密盒"
+            }
+
+        }, {
+            "path": "pages/index/longin/Servicetext",
+            "style": {
+                "navigationBarTitleText": "用户服务协议"
+
+            }
+
+        }, {
+            "path": "pages/index/longin/Privacytext",
+            "style": {
+                "navigationBarTitleText": "用户隐私协议"
+
+            }
+        },
+        {
+            "path": "pages/index/circulation/circulation",
+            "style": {
+                "navigationBarTitleText": "流转中心"
+
+            }
+
+        }, {
+            "path": "pages/index/my/personal",
+            "style": {
+                "navigationBarTitleText": "我的",
+                "navigationStyle": "custom"
+            }
+
+
+        }, {
+            "path": "pages/index/videoPage/videoPage",
+            "style": {
+                "navigationBarTitleText": "视频详情",
+                "navigationStyle": "custom"
+            }
+        },
+		{
+            "path": "pages/index/my/set",
+            "style": {
+                "navigationBarTitleText": "钱包管理",
+                "enablePullDownRefresh": false
+            }
+
+        }, {
+            "path": "pages/index/my/wallet",
+            "style": {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+                "app-plus": {
+                    "bounce": "none", //关闭窗口回弹效果
+                    "titleNView": {
+                        "buttons": [ //原生标题栏按钮配置,
+                            {
+                                "text": "&#xe61b;",
+                                "fontSrc": "/static/iconfont/iconfont.ttf",
+                                "fontSize": "23",
+                                "float": "right"
+                            }
+                        ],
+                        "backButton": { //自定义 backButton
+                            "background": "#2F2D3D"
+                        }
+                    }
+                }
+            }
+
+        }
+        ,{
+            "path" : "pages/index/my/billDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "账单明细",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+		,{
+            "path" : "pages/index/my/rechargeBalance",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "充值蜜宝",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/index/my/withdraw",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "余额提现",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/index/my/walletDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "余额",
+                "enablePullDownRefresh": false
+            }  
+        }
+		,{
+		    "path" : "pages/index/my/PushOfficer/InvitationList",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "邀请记录",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
+		,{
+		    "path" : "pages/index/my/PushOfficer/PushOfficer",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "星推官",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
+		,{
+		    "path" : "pages/index/my/PushOfficer/pushIncome",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "推广收益",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
+		,{
+		    "path" : "pages/index/my/PushOfficer/pushSource",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "推广素材",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
+		,{
+		    "path" : "pages/index/my/PushOfficer/sourceInfo",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "素材详情",
+				  "navigationStyle": "custom"
+		    }
+		    
+		}
+		,{
+		    "path" : "pages/index/my/PushOfficer/addPushOfficer",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "星推官",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
+		,{
+		    "path" : "pages/index/videoPage/shortVideo",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "短视频",
+				"app-plus":{
+					"titleNView": false,
+					"bounce": "none"
+				}
+		    }
+		    
+		}
+        ,{
+            "path" : "pages/index/my/bindingAlipay",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "绑定支付宝",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/index/my/biAlipay",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "支付宝信息",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/index/my/unBindingAliPay",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "解绑支付宝",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+		    "path" : "pages/index/videoPage/nvueSwiper",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "短视频",
+		        "app-plus":{
+		        	"titleNView": false,
+		        	"bounce": "none"
+		        }
+		    }
+		    
+		}
+        ,{
+            "path" : "pages/index/my/member/member",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "会员",
+                "enablePullDownRefresh": false,
+				 "navigationStyle": "custom" // 隐藏系统导航栏
+            }
+            
+        }
+		,{
+		    "path" : "pages/index/videoPage/authorPage",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "作者",
+		        // "enablePullDownRefresh": true,
+		        "onReachBottomDistance": 100,
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor": "#11191f"
+				 // "navigationStyle": "custom" // 隐藏系统导航栏
+		    }
+		}
+		, {
+		    "path": "pages/index/videoPage/detailPage",
+		    "style": {
+		        "navigationBarTitleText": "视频详情",
+		        "navigationStyle": "custom"
+		    }
+		}
+    ],
+    "globalStyle": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "密盒星球",
+        "navigationBarBackgroundColor": "#FFF",
+        "backgroundColor": "#FFF"
+    }
+}

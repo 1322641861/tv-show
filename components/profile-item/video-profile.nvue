@@ -1,0 +1,187 @@
+<template>
+	<view class="video-profile video-profile-wrap">
+		<view class="title-wrap">
+			<view class="left-title" @click="gotoDetail">
+				<image class="img" :src="cover" mode="aspectFill"></image>
+				<view class="title-msg">
+					<text class="title">{{playletName}}</text>
+					<view class="flag-wrap">
+						<view class="flag-list" v-for="(itm, index) in playletTagsList" :key="index">
+							<view class="flag-list-2" v-if="index < 3">
+								<image class="flag-list-img" src="/static/home/flag.png" mode="aspectFit"></image>
+								<text class="flag-list-txt">{{itm}}</text>
+							</view>
+						</view>
+						
+					</view>
+				</view>
+			</view>
+			<view class="collect-btn" @click.stop="collectVideo" v-if="isShowCollect">
+				<view class="collect-item is-collect" v-if="isCollected">
+					<image class="collect-icon" src="/static/home/collected.png" mode="aspectFit"></image>
+					<text class="collect-txt" v-if="!isLike">已追</text>
+					<text class="collect-txt" v-if="isLike">已点赞</text>
+				</view>
+				<view class="collect-item not-collect" v-if="!isCollected">
+					<image class="collect-icon" src="/static/home/collect.png" mode="aspectFit"></image>
+					<text class="collect-txt" v-if="!isLike">追剧</text>
+					<text class="collect-txt" v-if="isLike">点赞</text>
+				</view>
+			</view>
+		</view>
+		<text class="details">{{synopsis}}</text>
+	</view>
+</template>
+
+<script>
+	export default {
+		name: 'video-profile',
+		props: {
+			synopsis: {
+				type: String,
+				default: ''
+			},
+			cover: {
+				type: String,
+				default: ''
+			},
+			playletName: {
+				type: String,
+				default: ''
+			},
+			playletTagsList: {
+				type: Array,
+				default: () => []
+			},
+			isCollected: {
+				type: Boolean,
+				default: false
+			},
+			isShowCollect: {
+				type: Boolean,
+				default: true
+			},
+			isLike: {
+				type: Boolean,
+				default: false
+			}
+		},
+		data() {
+			return {
+
+			}
+		},
+		methods: {
+			collectVideo() {
+				this.$emit('collectVideo');
+			},
+			gotoDetail() {
+				this.$emit('gotoDetail');
+			}
+		},
+	}
+</script>
+
+<style scoped lang="scss">
+	.video-list .video-profile-wrap {
+		padding: 0 36rpx;
+		margin-top: 20rpx;
+		color: #fff;
+	}
+	.video-profile-wrap .title-wrap {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+	.video-profile-wrap .left-title {
+		display: flex;
+		flex-direction: row;
+		flex: 1;
+		margin-right: 12rpx;
+	}
+	.video-profile-wrap .img {
+		width: 96rpx;
+		height: 96rpx;
+		border-radius: 12rpx;
+		margin-right: 24rpx;
+		background: rgba(255, 255, 255, 0.08);
+	}
+	
+	.video-profile-wrap .title-msg {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		flex: 1;
+	}
+	.video-profile-wrap .title {
+		font-weight: 500;
+		font-size: 36rpx;
+		line-height: 50rpx;
+		/* #ifdef APP */
+		lines: 1;
+		/*  #endif */
+		/*  #ifdef H5 */
+		overflow: hidden;
+		white-space: nowrap;
+		/*  #endif */
+		text-overflow: ellipsis;
+		color: $uni-theme-textcolor;
+	}
+	.video-profile-wrap .flag-wrap {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+	.video-profile-wrap .flag-list {
+		margin-right: 12rpx;
+		margin-top: 12rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+	.flag-list-2 {
+		padding: 4rpx 12rpx;
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: 8rpx;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
+	.video-profile-wrap .flag-list-txt {	
+		font-size: 24rpx;
+		color: $uni-theme-textcolor;
+	}
+	.video-profile-wrap .flag-list-img {
+		width: 20rpx;
+		height: 32rpx;
+		margin-right: 8rpx;
+	}
+	
+	.video-profile-wrap .collect-item {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: center;
+		// height: 100%;
+	}
+	.video-profile-wrap .collect-icon {
+		width: 48rpx;
+		height: 48rpx;
+		margin-bottom: 24rpx;
+	}
+	.video-profile-wrap .collect-txt {
+		font-weight: 400;
+		font-size: 24rpx;
+		line-height: 34rpx;
+		color: $uni-theme-textcolor;
+	}
+	.video-profile-wrap .details {
+		font-weight: 500;
+		font-size: 28rpx;
+		line-height: 40rpx;
+		color: #A6AEB6;
+		margin-top: 48rpx;
+		color: $uni-theme-textcolor;
+	}
+</style>

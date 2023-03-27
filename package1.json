@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@videojs-player/vue": "^1.0.0",
+    "import-three-examples": "^2.2.4",
+	"three": "^0.139.2",
+    "@types/video.js": "7.x",
+    "video.js": "^7.20.3",
+    "vue-video-player": "^4.0.6"
+  }
+}
